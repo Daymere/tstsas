@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *,
+        *::after,
+        *::before{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        body{
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        #result{
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #getresult{
+            margin-top: 30px;
+            padding: 10px 40px;
+            background: rgb(41, 118, 218);
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            border: none;
+            transition: background .2s ease;
+        }
+        .display{
+            font-size: 20px;
+        }
+        #getresult:hover{
+            background: rgb(28, 96, 185);
+        }
+        #attempt{
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="display">
+        Результат:
+        <ul id="result"></ul>
+    </div>
+    <button id="getresult">Получить результат</button>
+    <div id="attempt"></div>
+    
+    <script>
+
+        const chances = {
+            "unique": 0.5,
+            "rarely": 2,
+            "small": 10,
+            "medium": 35,
+            "big": 100
+        }
+
+        const options = [
+            { id: 1, name: "Сила маг. атаки +10.00%",chance: chances.rarely },
+            { id: 2, name: "Сила маг. атаки +5.00%",chance: chances.small },
+            { id: 3, name: "Сила маг. атаки +1.00%",chance: chances.big },
+            { id: 4, name: "Сила физ. атаки +10.00%",chance: chances.rarely },
+            { id: 5, name: "Сила физ. атаки +5.00%",chance: chances.small },
+            { id: 6, name: "Сила физ. атаки +1.00%",chance: chances.big },
+            { id: 7, name: "Сила атаки +10.00%",chance: chances.unique },
+            { id: 8, name: "Сила атаки +5.00%",chance: chances.rarely },
+            { id: 9, name: "Урон от крита +0.25",chance: chances.unique },
+            { id: 10, name: "Урон от крита +0.20",chance: chances.rarely },
+            { id: 11, name: "Урон от крита +0.15",chance: chances.small },
+            { id: 12, name: "Урон от крита +0.10",chance: chances.medium },
+            { id: 13, name: "Урон от крита +0.05",chance: chances.big },
+            { id: 14, name: "Шанс крита +10.00",chance: chances.unique },
+            { id: 15, name: "Шанс крита +8.00",chance: chances.rarely },
+            { id: 16, name: "Шанс крита +6.00",chance: chances.rarely },
+            { id: 17, name: "Шанс крита +4.00",chance: chances.medium },
+            { id: 18, name: "Шанс крита +2.00",chance: chances.big },
+            { id: 19, name: "Вампиризм 3%",chance: chances.unique },
+            { id: 20, name: "Вампиризм 2%",chance: chances.rarely },
+            { id: 21, name: "Вампиризм 1%",chance: chances.small },
+            { id: 22, name: "Сила +10.00",chance: chances.small },
+            { id: 23, name: "Сила +5.00",chance: chances.medium },
+            { id: 24, name: "Сила +3.00",chance: chances.big },
+            { id: 25, name: "Живучесть +10.00",chance: chances.small },
+            { id: 26, name: "Живучесть +5.00",chance: chances.medium },
+            { id: 27, name: "Живучесть +3.00",chance: chances.big },
+            { id: 28, name: "Скорость навыка +30,00%",chance: chances.rarely },
+            { id: 29, name: "Скорость навыка +25,00%",chance: chances.small },
+            { id: 30, name: "Скорость навыка +20,00%",chance: chances.small },
+            { id: 31, name: "Скорость навыка +15,00%",chance: chances.medium },
+            { id: 32, name: "Скорость навыка +10,00%",chance: chances.big },
+            { id: 33, name: "Скорость навыка +5,00%",chance: chances.big },
+            { id: 34, name: "Мудрость +10.00",chance: chances.small },
+            { id: 35, name: "Мудрость +5.00",chance: chances.medium },
+            { id: 36, name: "Мудрость +3.00",chance: chances.big },
+            { id: 37, name: "Интеллект +10.00",chance: chances.small },
+            { id: 38, name: "Интеллект +5.00",chance: chances.medium },
+            { id: 39, name: "Интеллект +3.00",chance: chances.big },
+            { id: 40, name: "Рейтинг атаки +5.00",chance: chances.small },
+            { id: 41, name: "Рейтинг атаки +4.00",chance: chances.medium },
+            { id: 42, name: "Рейтинг атаки +3.00",chance: chances.big },
+            { id: 43, name: "Рейтинг атаки +2.00",chance: chances.big },
+            { id: 44, name: "Рейтинг атаки +1.00",chance: chances.big },
+            { id: 45, name: "Сила физ. атаки +25.00",chance: chances.rarely },
+            { id: 46, name: "Сила физ. атаки +20.00",chance: chances.small },
+            { id: 47, name: "Сила физ. атаки +15.00",chance: chances.small },
+            { id: 48, name: "Сила физ. атаки +10.00",chance: chances.medium },
+            { id: 49, name: "Сила физ. атаки +5.00",chance: chances.big },
+            { id: 50, name: "Сила маг. атаки +30.00",chance: chances.small },
+            { id: 51, name: "Сила маг. атаки +25.00",chance: chances.small },
+            { id: 52, name: "Сила маг. атаки +20.00",chance: chances.medium },
+            { id: 53, name: "Сила маг. атаки +15.00",chance: chances.medium },
+            { id: 54, name: "Сила маг. атаки +10.00",chance: chances.medium },
+            { id: 55, name: "Сила маг. атаки +5.00",chance: chances.big },
+            { id: 56, name: "Ловкость +10.00",chance: chances.rarely },
+            { id: 57, name: "Ловкость +5.00",chance: chances.medium },
+            { id: 58, name: "Ловкость +3.00",chance: chances.big },
+        ];
+
+        const resultDspl = document.getElementById("result");
+        const resultBtn = document.getElementById("getresult");
+        const attemptDspl = document.getElementById("attempt");
+
+        let time = Date.now();
+        let attempt = 0;
+
+        resultBtn.addEventListener("click", () => {
+            attempt = 0;
+            findDoubleOpc();
+        });
+
+        function findDoubleOpc(){
+            const {opcs, rars, unq, items} = setOptions();
+            const sum = rars + unq;
+            attempt += 1;
+            let diff = Date.now() - time;
+            time = Date.now();
+                
+            resultDspl.innerHTML = "";                
+            resultDspl.append(...items);
+
+            if(sum < 2){
+                if(diff < 50){
+                    setTimeout(findDoubleOpc, 50 - diff);
+                } else {                
+                    requestAnimationFrame(findDoubleOpc);
+                }
+            } else {
+                attemptDspl.innerHTML = "Количество попыток: " + attempt;
+            }
+        }
+
+        function setOptions(){
+            const opcs = getOptions(3);
+            let rars = 0;
+            let unq = 0;
+            let items = [];
+
+            for(let {name, chance} of opcs){
+                const li = document.createElement("li");
+                li.innerHTML = name;
+                if(chance === chances.rarely){
+                    li.style.color = "#ff0000";
+                    rars++;
+                }
+                if(chance === chances.unique){
+                    li.style.color = "#ff0000";
+                    unq++;
+                }
+                items.push(li);
+            }
+
+            return {opcs, rars, unq, items};
+        }
+
+        function getOptions(count = 1){
+            const objChances = Object.entries(chances).sort((a, b) => a[1] - b[1]);
+            const result = [];
+
+            for(let i = 0; i < count; i++){
+                const id = Math.min(getIndex(), 99);
+                const [, ch] = objChances.find(([name, chance]) => chance > id);
+                const foundOptions = options.filter(({ chance }) => ch === chance)
+
+                const newIndex = Math.floor(Math.random() * foundOptions.length);
+                result.push(foundOptions[newIndex]);
+            }
+
+            return result;
+        }
+
+        function getIndex(){
+            const index = (Math.random() * 100).toFixed(1);
+
+            return index;
+        }
+    </script>
+</body>
+</html>
